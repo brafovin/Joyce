@@ -100,7 +100,6 @@
         .game-board {
             display: grid;
             gap: 12px;
-            perspective: 1000px;
             max-width: 650px;
             width: 100%;
         }
@@ -127,16 +126,12 @@
 
         .card.matched .card-front {
             background: linear-gradient(135deg, #a8e063, #56ab2f);
-            animation: pulse 0.6s ease;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
         }
 
         .card-face {
             position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             border-radius: 10px;
@@ -146,22 +141,20 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
             font-size: clamp(1.2rem, 5vw, 3rem);
             overflow: hidden;
-            transition: opacity 0.2s ease;
         }
 
         .card-front {
-            opacity: 0;
-            pointer-events: none;
+            visibility: hidden;
         }
 
         .card.flipped .card-front,
         .card.matched .card-front {
-            opacity: 1;
+            visibility: visible;
         }
 
         .card.flipped .card-back,
         .card.matched .card-back {
-            opacity: 0;
+            visibility: hidden;
         }
 
         .game-board.cards-28 .card-face,
