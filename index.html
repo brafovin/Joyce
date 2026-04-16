@@ -26,9 +26,13 @@
         /* Level-abhängige Hintergrundfarben */
         body.level-1 { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #3b82f6 100%); }
         body.level-2 { background: linear-gradient(135deg, #0f766e 0%, #14b8a6 50%, #2dd4bf 100%); }
-        body.level-3 { background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 50%, #a78bfa 100%); }
-        body.level-4 { background: linear-gradient(135deg, #9d174d 0%, #db2777 50%, #f472b6 100%); }
-        body.level-5 { background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 50%, #f97316 100%); }
+        body.level-3 { background: linear-gradient(135deg, #065f46 0%, #10b981 50%, #6ee7b7 100%); }
+        body.level-4 { background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 50%, #a78bfa 100%); }
+        body.level-5 { background: linear-gradient(135deg, #9d174d 0%, #db2777 50%, #f472b6 100%); }
+        body.level-6 { background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 50%, #f97316 100%); }
+        body.level-7 { background: linear-gradient(135deg, #78350f 0%, #d97706 50%, #fcd34d 100%); }
+        body.level-8 { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #6366f1 100%); }
+        body.level-9 { background: linear-gradient(135deg, #831843 0%, #7c3aed 35%, #dc2626 70%, #f59e0b 100%); }
 
         h1 {
             font-size: 2.5rem;
@@ -106,6 +110,10 @@
         .game-board.cards-16 { grid-template-columns: repeat(4, 1fr); }
         .game-board.cards-20 { grid-template-columns: repeat(5, 1fr); }
         .game-board.cards-24 { grid-template-columns: repeat(6, 1fr); }
+        .game-board.cards-28 { grid-template-columns: repeat(7, 1fr); max-width: 750px; }
+        .game-board.cards-32 { grid-template-columns: repeat(8, 1fr); max-width: 800px; }
+        .game-board.cards-36 { grid-template-columns: repeat(6, 1fr); max-width: 750px; }
+        .game-board.cards-40 { grid-template-columns: repeat(8, 1fr); max-width: 850px; }
 
         .card {
             aspect-ratio: 3 / 4;
@@ -146,8 +154,23 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.35);
-            font-size: 2.8rem;
+            font-size: clamp(1.2rem, 5vw, 2.8rem);
             overflow: hidden;
+        }
+
+        .game-board.cards-28 .card-face,
+        .game-board.cards-32 .card-face,
+        .game-board.cards-36 .card-face,
+        .game-board.cards-40 .card-face {
+            font-size: clamp(0.9rem, 3.2vw, 1.8rem);
+            border-radius: 8px;
+        }
+
+        .game-board.cards-28,
+        .game-board.cards-32,
+        .game-board.cards-36,
+        .game-board.cards-40 {
+            gap: 8px;
         }
 
         /* Schönes Rückseiten-Design mit Muster */
@@ -288,7 +311,7 @@
 </head>
 <body class="level-1">
     <h1>🎴 Memory Spiel 🎴</h1>
-    <div class="level-badge">Level <span id="level">1</span> von 5</div>
+    <div class="level-badge">Level <span id="level">1</span> von <span id="max-level">9</span></div>
 
     <div class="info">
         <span>Züge: <span id="moves">0</span></span>
@@ -312,15 +335,22 @@
     </div>
 
     <script>
-        const SYMBOLS = ['🐶', '🐱', '🦊', '🐻', '🐼', '🦁', '🐸', '🐵', '🦄', '🐙', '🦋', '🐧'];
+        const SYMBOLS = [
+            '🐶', '🐱', '🦊', '🐻', '🐼', '🦁', '🐸', '🐵', '🦄', '🐙',
+            '🦋', '🐧', '🐢', '🦉', '🐝', '🐞', '🦖', '🦒', '🐳', '🦩'
+        ];
 
-        // Pro Level: Kartenanzahl (immer gerade, steigt pro Level)
+        // Pro Level: Kartenanzahl (immer gerade, steigt pro Level bis 40)
         const LEVELS = [
             { cards: 8 },   // Level 1
             { cards: 12 },  // Level 2
             { cards: 16 },  // Level 3
             { cards: 20 },  // Level 4
-            { cards: 24 }   // Level 5
+            { cards: 24 },  // Level 5
+            { cards: 28 },  // Level 6
+            { cards: 32 },  // Level 7
+            { cards: 36 },  // Level 8
+            { cards: 40 }   // Level 9
         ];
 
         let currentLevel = 1;
@@ -333,6 +363,7 @@
         const body = document.body;
         const board = document.getElementById('board');
         const levelEl = document.getElementById('level');
+        const maxLevelEl = document.getElementById('max-level');
         const movesEl = document.getElementById('moves');
         const pairsEl = document.getElementById('pairs');
         const totalPairsEl = document.getElementById('total-pairs');
@@ -378,6 +409,7 @@
             lockBoard = false;
 
             levelEl.textContent = currentLevel;
+            maxLevelEl.textContent = LEVELS.length;
             movesEl.textContent = '0';
             pairsEl.textContent = '0';
             totalPairsEl.textContent = cardCount / 2;
