@@ -119,13 +119,6 @@
             aspect-ratio: 3 / 4;
             position: relative;
             cursor: pointer;
-            transform-style: preserve-3d;
-            transition: transform 0.5s;
-        }
-
-        .card.flipped,
-        .card.matched {
-            transform: rotateY(180deg);
         }
 
         .card.matched {
@@ -138,15 +131,14 @@
         }
 
         @keyframes pulse {
-            0%, 100% { transform: rotateY(180deg) scale(1); }
-            50% { transform: rotateY(180deg) scale(1.1); }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         .card-face {
             position: absolute;
             width: 100%;
             height: 100%;
-            backface-visibility: hidden;
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -154,6 +146,22 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
             font-size: clamp(1.2rem, 5vw, 3rem);
             overflow: hidden;
+            transition: opacity 0.2s ease;
+        }
+
+        .card-front {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .card.flipped .card-front,
+        .card.matched .card-front {
+            opacity: 1;
+        }
+
+        .card.flipped .card-back,
+        .card.matched .card-back {
+            opacity: 0;
         }
 
         .game-board.cards-28 .card-face,
@@ -211,7 +219,6 @@
         .card-front {
             background: white;
             color: #333;
-            transform: rotateY(180deg);
             border: 3px solid #764ba2;
         }
 
